@@ -16,7 +16,7 @@ throw() {
 command -v github-release > /dev/null 2>&1 || throw "Unable to locate github-release binary"
 
 # Ensure a single .gemspec file is present.
-GEMSPEC_COUNT=$(find . -type f -name "*.gemspec" | wc -l | tr -d [:space:])
+GEMSPEC_COUNT=$(find . -type f -name "*.gemspec" | wc -l | tr -d "[:space:]")
 [ "$GEMSPEC_COUNT" != "1" ] && throw "Expecting a single .gemspec file"
 
 # Find .gemspec file.
