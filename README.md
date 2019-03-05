@@ -2,6 +2,10 @@
 
 > Scripts used for releasing Attest products.
 
+## Disclaimer
+
+These scripts are run from our CI processes "as-is". If unexpected/breaking changes are made to any of these scripts, it's very likely a deployment or build of something else will break. Please be extra cautious when working in this repository.
+
 ## Usage
 
 These scripts are meant to be run from within CircleCI. You probably don't want to run any of these scripts locally.
