@@ -35,14 +35,17 @@ Creates GitHub Releases in Ruby projects. Will derive the release name from the 
 ### zip-dir-upload-to-artifactory.sh
 
 The `zip-dir-upload-to-artifactory` script zip's a given directory and uploads the zip file to artifactory (agora). The script 2 arguments, in the below order respectively:
-| Argument | Type | Description |
+| Argument | Description |
 |---|---|---|
-| dir ($1) | `String` | **(Mandatory)** the directory to zip |
-| prefix ($2) | `String` | **(Optional)** a prefix tot he zip file name |
+| dir ($1) | **(Mandatory)** the directory to zip |
+| prefix ($2) | **(Optional)** a prefix tot he zip file name |
 
 **Usage:**
 
-```bash zip-dir-upload-to-artifactory.sh dist "next-$(git rev-parse --short HEAD)"``` 
+```
+bash zip-dir-upload-to-artifactory.sh dist "next-$(git rev-parse --short HEAD)"
+``` 
+
 where argument, `dist`  is the directory to zip and `next-$(git rev-parse --short HEAD)` is an optional prefix to the generated zip file name.
 
 >Note: The `zip-dir-upload-to-artifactory` script is put together for use in CI (circle), and expects `ARTIFACTORY_REPO` and `ARTIFACTORY_API_KEY` as environment variables. Ensure these are configured and available when used in other setups.
