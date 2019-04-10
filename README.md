@@ -36,14 +36,14 @@ Creates GitHub Releases in Ruby projects. Will derive the release name from the 
 
 The `zip-dir-upload-to-artifactory` script zip's a given directory and uploads the zip file to artifactory (agora). The script 2 arguments, in the below order respectively:
 | Argument | Description |
-|---|---|---|
+|---|---|
 | dir ($1) | **(Mandatory)** the directory to zip |
 | prefix ($2) | **(Optional)** a prefix tot he zip file name |
 
 **Usage:**
 
 ```
-bash zip-dir-upload-to-artifactory.sh dist "next-$(git rev-parse --short HEAD)"
+zip-dir-upload-to-artifactory.sh dist "next-$(git rev-parse --short HEAD)"
 ``` 
 
 where argument, `dist`  is the directory to zip and `next-$(git rev-parse --short HEAD)` is an optional prefix to the generated zip file name.
