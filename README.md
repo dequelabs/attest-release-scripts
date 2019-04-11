@@ -50,6 +50,22 @@ where argument, `dist`  is the directory to zip and `next-$(git rev-parse --shor
 
 >Note: The `zip-dir-upload-to-artifactory` script is put together for use in CI (circle), and expects `ARTIFACTORY_REPO` and `ARTIFACTORY_API_KEY` as environment variables. Ensure these are configured and available when used in other setups.
 
+### md-to-html
+
+The `md-to-html` script converts a given collection of markdown files to html. The script accepts 2 arguments in the below order respectively:
+| Argument | Description |
+|---|---|
+| inputFiles ($1) | **(Mandatory)** a file or glob of markdown files to convert |
+| destDir ($1) | **(Mandatory)** destination directory to created the converted html files |
+
+**Usage:**
+
+```
+md-to-html.sh docs/*.md output
+``` 
+
+where argument, `docs/*.md` are the markdown files and `output` is the directory in which the html files are created.
+
 ## License
 
 MPL-2.0
