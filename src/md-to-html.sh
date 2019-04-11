@@ -14,9 +14,9 @@ if [ $# -eq 0 ]
 fi
 
 
-# ensure showdown exists in path
-if ! [ -x "$(command -v showdown)" ]; then
-  throw "Showdown is not installed. Please install showdown and ensure it is made available at ./node_modules/.bin/showdown"
+# ensure npx exists in path
+if ! [ -x "$(command -v npx)" ]; then
+  throw "npx is not available"
 fi
 
 # save args to variables
@@ -28,19 +28,23 @@ if [ ! -d "$destDir" ]; then
   mkdir -p "$destDir"
 fi
 
+# ensure all given files are of type markdown
+for file in $inputFiles; 
+  do
+    extension="${filename##*.}"
+    if [ ! "$extension" = "md" ]
+      then
+        throw "$file is not of type markdown."
+    fi
+done
+
 # convert files
 for file in $inputFiles; 
   do
     filename=$(basename -- "$file")
-    extension="${filename##*.}"
     filename="${filename%.*}"
-
-    if [ ! "$extension" = "md" ]
-      then
-        throw "Only markdown files should be supplied as input"
-    fi
     output="$destDir/${filename}.html"  
-    ./node_modules/.bin/showdown makehtml -i "$file" -o "$output" --tables
+    npx showdown makehtml -i "$file" -o "$output" --tables
 done
 
 echo "Converted MD to HTML!"
