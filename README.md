@@ -34,7 +34,7 @@ Creates GitHub Releases in Ruby projects. Will derive the release name from the 
 
 ### zip-dir-upload-to-artifactory.sh
 
-The `zip-dir-upload-to-artifactory` script zip's a given directory and uploads the zip file to artifactory (agora). The script 2 arguments, in the below order respectively:
+The `zip-dir-upload-to-artifactory` script zip's a given directory and uploads the zip file to artifactory (agora). The script accepts 2 arguments, in the below order respectively:
 | Argument | Description |
 |---|---|
 | dir ($1) | **(Mandatory)** the directory to zip |
@@ -49,6 +49,22 @@ zip-dir-upload-to-artifactory.sh dist "next-$(git rev-parse --short HEAD)"
 where argument, `dist`  is the directory to zip and `next-$(git rev-parse --short HEAD)` is an optional prefix to the generated zip file name.
 
 >Note: The `zip-dir-upload-to-artifactory` script is put together for use in CI (circle), and expects `ARTIFACTORY_REPO` and `ARTIFACTORY_API_KEY` as environment variables. Ensure these are configured and available when used in other setups.
+
+### md-to-html
+
+The `md-to-html` script converts a given collection of markdown files to html. The script accepts 2 arguments in the below order respectively:
+| Argument | Description |
+|---|---|
+| inputFiles ($1) | **(Mandatory)** a file or glob of markdown files to convert |
+| destDir ($1) | **(Mandatory)** destination directory to created the converted html files |
+
+**Usage:**
+
+```
+md-to-html.sh docs/*.md output
+``` 
+
+where argument, `docs/*.md` are the markdown files and `output` is the directory in which the html files are created.
 
 ## License
 
