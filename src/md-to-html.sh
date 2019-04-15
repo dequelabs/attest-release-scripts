@@ -23,21 +23,26 @@ fi
 inputDir=$1
 destDir=$2
 
-# create dir, if destination directory does not exist
-mkdir -p "$destDir"
-
 # convert markdown files from given input directory
 # Note: IFS (Internal field seperator) is set to spaces, to allow for file names with space characters
 # Note: -f - disable file globbing (see - https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 IFS=$'\n'
 set -f
 
-for file in $(find $inputDir -name '*.md')
+files=$(find "$inputDir" -type f -name '*.md')
+
+for file in $files
   do 
-    filename=$(basename -- "$file")
-    filename="${filename%.*}"
-    output="$destDir/${filename}.html"  
-    npx showdown makehtml -i "$file" -o "$output" --tables
+    # replace path to specified output directory
+    newPath="${file/$inputDir/$destDir}"
+    # get dir of new path
+    dir=$(dirname -- "$newPath")
+    # make dir
+    mkdir -p "$dir"
+    # replace md extenstion with html
+    outputFile="${newPath/.md/.html}"
+    # convert
+    npx showdown makehtml -i "$file" -o "$outputFile" --tables
 done
 
 unset IFS 
