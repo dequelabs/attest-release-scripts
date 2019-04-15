@@ -20,31 +20,32 @@ if ! [ -x "$(command -v npx)" ]; then
 fi
 
 # save args to variables
-inputFiles=$1
+inputDir=$1
 destDir=$2
 
-# create dir, if destination directory does not exist
-if [ ! -d "$destDir" ]; then
-  mkdir -p "$destDir"
-fi
+# convert markdown files from given input directory
+# Note: IFS (Internal field seperator) is set to spaces, to allow for file names with space characters
+# Note: -f - disable file globbing (see - https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+IFS=$'\n'
+set -f
 
-# ensure all given files are of type markdown
-for file in $inputFiles; 
-  do
-    extension="${filename##*.}"
-    if [ ! "$extension" = "md" ]
-      then
-        throw "$file is not of type markdown."
-    fi
+files=$(find "$inputDir" -type f -name '*.md')
+
+for file in $files
+  do 
+    # replace path to specified output directory
+    newPath="${file/$inputDir/$destDir}"
+    # get dir of new path
+    dir=$(dirname -- "$newPath")
+    # make dir
+    mkdir -p "$dir"
+    # replace md extenstion with html
+    outputFile="${newPath/.md/.html}"
+    # convert
+    npx showdown makehtml -i "$file" -o "$outputFile" --tables
 done
 
-# convert files
-for file in $inputFiles; 
-  do
-    filename=$(basename -- "$file")
-    filename="${filename%.*}"
-    output="$destDir/${filename}.html"  
-    npx showdown makehtml -i "$file" -o "$output" --tables
-done
+unset IFS 
+set +f
 
 echo "Converted MD to HTML!"
