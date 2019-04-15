@@ -55,13 +55,13 @@ where argument, `dist`  is the directory to zip and `next-$(git rev-parse --shor
 The `md-to-html` script converts a given collection of markdown files to html. The script accepts 2 arguments in the below order respectively:
 | Argument | Description |
 |---|---|
-| inputFiles ($1) | **(Mandatory)** a file or glob of markdown files to convert |
+| inputDir ($1) | **(Mandatory)** input directory containing markdown files to convert |
 | destDir ($1) | **(Mandatory)** destination directory to created the converted html files |
 
 **Usage:**
 
 ```
-md-to-html.sh docs/*.md output
+md-to-html.sh docs output
 ``` 
 
 where argument, `docs/*.md` are the markdown files and `output` is the directory in which the html files are created.
