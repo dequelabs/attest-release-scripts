@@ -34,13 +34,23 @@ if ! [ -x "$(command -v jq)" ]; then
   throw "Error: jq is not installed."
 fi
 
-# Get name & version of the library from `package.json`
-name=$(< package.json jq -r .name)
-version=$(< package.json jq -r .version)
-
 # save args to variables
 directory=$1
 prefix=$2
+name=$3
+version=$4
+
+# get `name` from `package.json` of the library, if not supplied as an argument 
+if [ -z "$name" ]
+  then
+    name=$(< package.json jq -r .name)
+fi
+
+# get `version` from `package.json` of the library, if not supplied as an argument 
+if [ -z "$version" ]
+  then
+    version=$(< package.json jq -r .version)
+fi
 
 # navigate to specified directory
 cd "$directory" || throw "$directory does not exist, cannot navigate."

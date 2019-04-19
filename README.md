@@ -39,7 +39,9 @@ The `zip-dir-upload-to-artifactory` script zip's a given directory and uploads t
 | Argument | Description |
 |---|---|
 | dir ($1) | **(Mandatory)** the directory to zip |
-| prefix ($2) | **(Optional)** a prefix tot he zip file name |
+| prefix ($2) | **(Optional)** a prefix to the zip file name |
+| name ($2) | **(Optional)** name used as path under artifactory repository to where the zip file will be uploaded |
+| version ($2) | **(Optional)** version number used to construct the zip file name |
 
 **Usage:**
 
