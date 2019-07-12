@@ -23,8 +23,8 @@ GEMSPEC_COUNT=$(find . -type f -name "*.gemspec" | wc -l | tr -d "[:space:]")
 # Find .gemspec file.
 GEMSPEC_FILE=$(ls ./*.gemspec)
 
-# Parse the version number.
-PKG_VERSION=$(perl -nle 'print "$1" if m{spec\.version\s+=\s"(.*)"}' "$GEMSPEC_FILE")
+# Parse the version number (strip either single or double quotes around the version number if any)
+PKG_VERSION=$(perl -nle 'print "$1" if m{spec\.version\s+=\s(.*)}' "$GEMSPEC_FILE" | tr -d "'" | tr -d '"')
 
 # Ensure we read a version.
 [[ -z $PKG_VERSION ]] && throw "Unable to parse version"
