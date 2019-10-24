@@ -33,8 +33,8 @@ get_changelog () {
 [ -z "$CIRCLE_PROJECT_REPONAME" ] && throw "CIRCLE_PROJECT_REPONAME not set"
 [ -z "$CIRCLE_PROJECT_USERNAME" ] && throw "CIRCLE_PROJECT_USERNAME not set"
 
-# # Ensure https://github.com/aktau/github-release is installed.
-# # NOTE: we install it from gopkg (gopkg.in/aktau/github-release.v0), so the binary has a `.v0` suffix.
+# Ensure https://github.com/aktau/github-release is installed.
+# NOTE: we install it from gopkg (gopkg.in/aktau/github-release.v0), so the binary has a `.v0` suffix.
 command -v github-release.v0 > /dev/null 2>&1 || throw "Unable to locate github-release binary"
 
 # Parse the version number.
