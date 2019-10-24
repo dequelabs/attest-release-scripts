@@ -7,6 +7,27 @@ throw() {
   exit 1
 }
 
+get_changelog () {
+  changelog=""
+  has_start_line=0
+  while read line; do
+    if [[ $has_start_line -eq 0 ]]; then
+      # If we do not have a starting line, look for one.
+      if [[ "$line" =~ \#\ \[[[:digit:]] ]]; then
+        has_start_line=1
+      fi
+    elif [[ $has_start_line -eq 1 ]]; then
+      # If we do have a starting line, look for a closing line. Either exit the loop or append to the changelog.
+      if [[ "$line" =~ \#\ \[[[:digit:]] ]]; then
+        break
+      else
+        changelog=$"$changelog\n$line"
+      fi
+    fi
+  done <CHANGELOG.md
+  printf "$changelog"
+}
+
 # Ensure required env vars are set.
 [ -z "$GITHUB_TOKEN" ] && throw "GITHUB_TOKEN not set"
 [ -z "$CIRCLE_PROJECT_REPONAME" ] && throw "CIRCLE_PROJECT_REPONAME not set"
@@ -37,4 +58,4 @@ github-release.v0 release \
   --repo "$CIRCLE_PROJECT_REPONAME" \
   --tag "v$PKG_VERSION" \
   --name "Release $PKG_VERSION" \
-  --description "Public v$PKG_VERSION release"
+  --description "$(get_changelog)"
