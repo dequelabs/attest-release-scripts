@@ -29,13 +29,13 @@ get_changelog () {
 }
 
 # # Ensure required env vars are set.
-# [ -z "$GITHUB_TOKEN" ] && throw "GITHUB_TOKEN not set"
-# [ -z "$CIRCLE_PROJECT_REPONAME" ] && throw "CIRCLE_PROJECT_REPONAME not set"
-# [ -z "$CIRCLE_PROJECT_USERNAME" ] && throw "CIRCLE_PROJECT_USERNAME not set"
+[ -z "$GITHUB_TOKEN" ] && throw "GITHUB_TOKEN not set"
+[ -z "$CIRCLE_PROJECT_REPONAME" ] && throw "CIRCLE_PROJECT_REPONAME not set"
+[ -z "$CIRCLE_PROJECT_USERNAME" ] && throw "CIRCLE_PROJECT_USERNAME not set"
 
 # Ensure https://github.com/aktau/github-release is installed.
 # NOTE: we install it from gopkg (gopkg.in/aktau/github-release.v0), so the binary has a `.v0` suffix.
-# command -v github-release.v0 > /dev/null 2>&1 || throw "Unable to locate github-release binary"
+command -v github-release.v0 > /dev/null 2>&1 || throw "Unable to locate github-release binary"
 
 # Read version number. Attempt `lerna.json` before `package.json`.
 PKG_VERSION=
@@ -54,7 +54,7 @@ fi
 echo "Releasing v$PKG_VERSION"
 
 # Create a release.
-echo github-release.v0 release \
+github-release.v0 release \
   --user "$CIRCLE_PROJECT_USERNAME" \
   --repo "$CIRCLE_PROJECT_REPONAME" \
   --tag "v$PKG_VERSION" \
