@@ -10,7 +10,7 @@ throw() {
 get_changelog () {
   changelog=""
   has_start_line=0
-  while read line; do
+  while read -r line; do
     if [[ $has_start_line -eq 0 ]]; then
       # If we do not have a starting line, look for one.
       if [[ "$line" =~ \#\ \[[[:digit:]] ]]; then

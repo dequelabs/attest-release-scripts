@@ -5,4 +5,4 @@ jobs:
       - image: hamroctopus/shellcheck:1.0.0
     steps:
       - checkout
-      - run: shellcheck src/*
+      - run: shellcheck -e SC2059 src/*
