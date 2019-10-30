@@ -25,10 +25,9 @@ get_changelog () {
       fi
     fi
   done <CHANGELOG.md
-  echo "$changelog"
 }
 
-# # Ensure required env vars are set.
+# Ensure required env vars are set.
 [ -z "$GITHUB_TOKEN" ] && throw "GITHUB_TOKEN not set"
 [ -z "$CIRCLE_PROJECT_REPONAME" ] && throw "CIRCLE_PROJECT_REPONAME not set"
 [ -z "$CIRCLE_PROJECT_USERNAME" ] && throw "CIRCLE_PROJECT_USERNAME not set"
