@@ -25,6 +25,7 @@ get_changelog () {
       fi
     fi
   done <CHANGELOG.md
+  printf $changelog
 }
 
 # Ensure required env vars are set.
