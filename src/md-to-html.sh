@@ -42,7 +42,7 @@ for file in $files
     # replace md extenstion with html
     outputFile="${newPath/.md/.html}"
     # convert
-    npx showdown makehtml -i "$file" -o "$outputFile" --tables
+    npx showdown makehtml -i "$file" -o "$outputFile" --tables --ghCompatibleHeaderId
 done
 
 unset IFS 
