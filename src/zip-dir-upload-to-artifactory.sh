@@ -18,6 +18,10 @@ if [ -z "$ARTIFACTORY_REPO" ]
   then
     throw "Environment variable $ARTIFACTORY_REPO is not set."
 fi
+if [ -z "$ARTIFACTORY_REPO_QA" ]
+  then
+      throw "Environment variable $ARTIFACTORY_REPO_QA is not set."
+fi
 if [ -z "$ARTIFACTORY_API_KEY" ] 
   then
     throw "Environment variable $ARTIFACTORY_API_KEY is not set."
@@ -40,6 +44,9 @@ prefix=$2
 name=$3
 version=$4
 
+# Defaults to use the QA Artifactory
+ArtifactoryRepo=$ARTIFACTORY_REPO_QA
+
 # get `name` from `package.json` of the library, if not supplied as an argument 
 if [ -z "$name" ]
   then
@@ -50,6 +57,13 @@ fi
 if [ -z "$version" ]
   then
     version=$(< package.json jq -r .version)
+fi
+
+# Uses the `production` Artifactory when the branch is `master`
+[ -z "$CIRCLE_BRANCH" ] && throw "CIRCLE_BRANCH not set"
+if [ "$CIRCLE_BRANCH" = "master" ];
+  then
+    ArtifactoryRepo="$ARTIFACTORY_REPO"
 fi
 
 # navigate to specified directory
@@ -70,7 +84,7 @@ zip -r "$zipname" ./*
 # enumerate zip files and upload
 find . -name "*.zip" | while read -r f 
   do
-    remote_file="$ARTIFACTORY_REPO/$name/$zipname"
+    remote_file="$ArtifactoryRepo/$name/$zipname"
     echo "Uploading zip \"$f\" to \"$remote_file\""
     curl \
       -H "X-JFrog-Art-Api:$ARTIFACTORY_API_KEY" \
