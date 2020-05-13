@@ -14,7 +14,7 @@ if [ $# -eq 0 ]
 fi
 
 # ensure artifactory environment variables are available
-if [ -z "ARTIFACTORY_DOCUMENTS_REPOSITORY" ] 
+if [ -z "$ARTIFACTORY_DOCUMENTS_REPOSITORY" ] 
   then
     throw "Environment variable $ARTIFACTORY_DOCUMENTS_REPOSITORY is not set."
 fi
