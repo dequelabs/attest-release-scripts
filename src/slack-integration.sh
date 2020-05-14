@@ -7,8 +7,8 @@ throw() {
   exit 1
 }
 
-[ -z "$SLACK_CI_CHANNEL_RELEASE" ] && throw "Environment variable $SLACK_CI_CHANNEL_RELEASE is not set."
-[ -z "$SLACK_CI_CHANNEL_DEV" ] && throw "Environment variable ${SLACK_CI_CHANNEL_DEV} is not set."
+[ -z "$SLACK_CI_CHANNEL_RELEASE" ] && throw 'Environment variable $SLACK_CI_CHANNEL_RELEASE is not set.'
+[ -z "$SLACK_CI_CHANNEL_DEV" ] && throw 'Environment variable $SLACK_CI_CHANNEL_DEV is not set.'
 
 channel="$SLACK_CI_CHANNEL_DEV"
 
@@ -58,5 +58,5 @@ if [ "$SLACK_BUILD_STATUS" = "fail" ]; then
   fi
 else
   echo "The job completed successfully"
-  echo 'No Slack notification sent.'
+  echo "No Slack notification sent."
 fi
