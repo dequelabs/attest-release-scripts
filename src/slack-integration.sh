@@ -10,10 +10,13 @@ throw() {
 [ -z "$SLACK_CI_CHANNEL_RELEASE" ] && throw 'Environment variable '"$SLACK_CI_CHANNEL_RELEASE" 'is not set.'
 [ -z "$SLACK_CI_CHANNEL_DEV" ] && throw 'Environment variable '"$SLACK_CI_CHANNEL_DEV" 'is not set.'
 
-channel="$SLACK_CI_CHANNEL_DEV"
-
 if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "release" ]; then
   channel="$SLACK_CI_CHANNEL_RELEASE"
+elif [ "$CIRCLE_BRANCH" = "develop" ]; then
+  channel="$SLACK_CI_CHANNEL_DEV"
+else
+  echo "This branch is not develop, release, or master and will not send a message to slack"
+  exit 0
 fi
 
 if [ "$SLACK_BUILD_STATUS" = "fail" ]; then
