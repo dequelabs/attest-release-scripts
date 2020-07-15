@@ -103,12 +103,12 @@ function main() {
   [ -z "$Secret" ] && throw "Unable to set AWS secret access key"
 
   echo "Authenticating with AWS"
-  # AWS_ACCESS_KEY_ID=$Key AWS_SECRET_ACCESS_KEY=$Secret aws ecr get-login --no-include-email --region us-east-1 | /bin/bash
+  AWS_ACCESS_KEY_ID=$Key AWS_SECRET_ACCESS_KEY=$Secret aws ecr get-login --no-include-email --region us-east-1 | /bin/bash
 
   echo "Building, tagging and pushing version $Version$Suffix"
-  echo docker build "$DockerArgs" -t "$Repo:latest$Suffix" -t "$Repo:$Version$Suffix" "$Dockerfile"
-  echo docker push "$Repo:latest$Suffix"
-  echo docker push "$Repo:$Version$Suffix"
+  docker build "$DockerArgs" -t "$Repo:latest$Suffix" -t "$Repo:$Version$Suffix" "$Dockerfile"
+  docker push "$Repo:latest$Suffix"
+  docker push "$Repo:$Version$Suffix"
 
   echo "Done!"
 }
