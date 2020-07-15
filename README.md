@@ -36,7 +36,7 @@ Creates GitHub Releases in Ruby projects. Will derive the release name from the 
 
 Build and deploy a Docker image to ECR.
 
-Requires the following environment variables are exported:
+Requires the following environment variables to be exported:
 
 - `CIRCLE_BRANCH` (always set by CircleCI)
 - `DEV_AWS_SECRET_ACCESS_KEY` (set by the `html-team` CircleCI context)
