@@ -25,11 +25,6 @@ function usage() {
 }
 
 function main() {
-  if [ $# -eq 0 ]; then
-    usage
-    exit 1
-  fi
-
   readonly Branch="$CIRCLE_BRANCH"
   readonly Version=$(git rev-parse --short HEAD)
   local Repo=""
