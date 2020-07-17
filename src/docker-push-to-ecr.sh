@@ -101,7 +101,11 @@ function main() {
   AWS_ACCESS_KEY_ID=$Key AWS_SECRET_ACCESS_KEY=$Secret aws ecr get-login --no-include-email --region us-east-1 | /bin/bash
 
   echo "Building, tagging and pushing version $Version$Suffix"
-  docker build "$DockerArgs" -t "$Repo:latest$Suffix" -t "$Repo:$Version$Suffix" "$Dockerfile"
+  if [ -z "$DockerArgs" ]; then
+    docker build -t "$Repo:latest$Suffix" -t "$Repo:$Version$Suffix" "$Dockerfile"
+  else
+    docker build "$DockerArgs" -t "$Repo:latest$Suffix" -t "$Repo:$Version$Suffix" "$Dockerfile"
+  fi
   docker push "$Repo:latest$Suffix"
   docker push "$Repo:$Version$Suffix"
 
