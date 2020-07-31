@@ -21,6 +21,7 @@ function usage() {
   echo "    --dockerfile=[path]    Path to the Dockerfile (defaults to \".\")"
   echo "    --docker-args=[args]   Arguments to pass to \`docker build\`"
   echo "    --suffix=[suffix]      Suffix to add to the image tag"
+  echo "    --force                Force the script to push a \"dev\" image"
   echo ""
 }
 
@@ -33,6 +34,7 @@ function main() {
   local Suffix=""
   local Dockerfile="."
   local DockerArgs=""
+  local Force=false
 
   for i in "$@"; do
     case $i in
@@ -52,6 +54,10 @@ function main() {
       usage
       exit 0
       ;;
+    --force)
+      Force=true
+      shift
+      ;;
     *)
       throw "Unknown option provided: \"$i\""
       ;;
@@ -69,33 +75,45 @@ function main() {
   [ -z "$Branch" ] && throw "Branch required - set \$CIRCLE_BRANCH."
   [ -z "$Version" ] && throw "Unable to derive version - is this a Git repo?"
 
-  if [ "$Branch" = "master" ]; then
-    # Deploy develop commits to our development ECR for now. We don't want to give CI access to AWS prod, so instead, we simply deploy to dev with a `-production` Suffix.
-    Repo=$DEV_ECR
-    # Do not overwrite the user-provided suffix.
-    if [ -z "$Suffix" ]; then
-      Suffix="-production"
-    fi
-    # TODO: These should be `PROD_` keys.
-    Secret=$DEV_AWS_SECRET_ACCESS_KEY
-    Key=$DEV_AWS_ACCESS_KEY_ID
-  elif [ "$Branch" = "release" ]; then
-    # Deploy develop commits to our QA ECR.
-    Repo=$QA_ECR
-    # Since QA is in the same AWS account as dev, we can re-use the keys.
-    Secret=$DEV_AWS_SECRET_ACCESS_KEY
-    Key=$DEV_AWS_ACCESS_KEY_ID
-  elif [ "$Branch" = "develop" ]; then
+  if [ "$Force" = true ]; then
+    # If the script was run with `--force`, we'll _always_ push a "dev" image to the dev ECR.
     Repo=$DEV_ECR
     Secret=$DEV_AWS_SECRET_ACCESS_KEY
     Key=$DEV_AWS_ACCESS_KEY_ID
   else
-    throw "Refusing to push from unsupported branch ($Branch)"
+    # Otherwise, try to figure out what ECR to deploy to based on the Git branch.
+    if [ "$Branch" = "master" ]; then
+      # Deploy develop commits to our development ECR for now. We don't want to give CI access to AWS prod, so instead, we simply deploy to dev with a `-production` Suffix.
+      Repo=$DEV_ECR
+      # Do not overwrite the user-provided suffix.
+      if [ -z "$Suffix" ]; then
+        Suffix="-production"
+      fi
+      # TODO: These should be `PROD_` keys.
+      Secret=$DEV_AWS_SECRET_ACCESS_KEY
+      Key=$DEV_AWS_ACCESS_KEY_ID
+    elif [ "$Branch" = "release" ]; then
+      # Deploy develop commits to our QA ECR.
+      Repo=$QA_ECR
+      # Since QA is in the same AWS account as dev, we can re-use the keys.
+      Secret=$DEV_AWS_SECRET_ACCESS_KEY
+      Key=$DEV_AWS_ACCESS_KEY_ID
+    elif [ "$Branch" = "develop" ]; then
+      Repo=$DEV_ECR
+      Secret=$DEV_AWS_SECRET_ACCESS_KEY
+      Key=$DEV_AWS_ACCESS_KEY_ID
+    else
+      throw "Refusing to push from unsupported branch ($Branch)"
+    fi
   fi
 
   [ -z "$Repo" ] && throw "Unable to set ECR"
   [ -z "$Key" ] && throw "Unable to set AWS access key ID"
   [ -z "$Secret" ] && throw "Unable to set AWS secret access key"
+
+  if [ "$Force" = true ]; then
+    echo "Warning: --force flag provided. Ignoring branch and pushing a \"dev\" image!"
+  fi
 
   echo "Authenticating with AWS"
   AWS_ACCESS_KEY_ID=$Key AWS_SECRET_ACCESS_KEY=$Secret aws ecr get-login --no-include-email --region us-east-1 | /bin/bash
