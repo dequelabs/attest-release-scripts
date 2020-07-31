@@ -58,7 +58,10 @@ docker-push-to-ecr.sh [options]
     --dockerfile=[path]    Path to the Dockerfile (defaults to ".")
     --docker-args=[args]   Arguments to pass to `docker build`
     --suffix=[suffix]      Suffix to add to the image tag
+    --force                Force the script to push a "dev" image
 ```
+
+The `--force` flag is useful for testing Docker deployments. It should only be used in "special" scenarios (eg repository/service setup).
 
 **Examples**
 
