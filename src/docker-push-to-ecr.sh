@@ -76,6 +76,7 @@ function main() {
   [ -z "$Version" ] && throw "Unable to derive version - is this a Git repo?"
 
   if [ "$Force" = true ]; then
+    echo "Warning: --force flag provided. Ignoring branch and pushing a \"dev\" image!"
     # If the script was run with `--force`, we'll _always_ push a "dev" image to the dev ECR.
     Repo=$DEV_ECR
     Secret=$DEV_AWS_SECRET_ACCESS_KEY
@@ -110,10 +111,6 @@ function main() {
   [ -z "$Repo" ] && throw "Unable to set ECR"
   [ -z "$Key" ] && throw "Unable to set AWS access key ID"
   [ -z "$Secret" ] && throw "Unable to set AWS secret access key"
-
-  if [ "$Force" = true ]; then
-    echo "Warning: --force flag provided. Ignoring branch and pushing a \"dev\" image!"
-  fi
 
   echo "Authenticating with AWS"
   AWS_ACCESS_KEY_ID=$Key AWS_SECRET_ACCESS_KEY=$Secret aws ecr get-login --no-include-email --region us-east-1 | /bin/bash
