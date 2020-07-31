@@ -76,8 +76,8 @@ function main() {
   [ -z "$Version" ] && throw "Unable to derive version - is this a Git repo?"
 
   if [ "$Force" = true ]; then
-    echo "Warning: --force flag provided. Ignoring branch and pushing a \"dev\" image!"
     # If the script was run with `--force`, we'll _always_ push a "dev" image to the dev ECR.
+    echo "Warning: --force flag provided. Ignoring branch and pushing a \"dev\" image!"
     Repo=$DEV_ECR
     Secret=$DEV_AWS_SECRET_ACCESS_KEY
     Key=$DEV_AWS_ACCESS_KEY_ID
