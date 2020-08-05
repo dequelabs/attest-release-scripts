@@ -84,7 +84,7 @@ function main() {
   else
     # Otherwise, try to figure out what ECR to deploy to based on the Git branch.
     if [ "$Branch" = "master" ]; then
-      # Deploy develop commits to our development ECR for now. We don't want to give CI access to AWS prod, so instead, we simply deploy to dev with a `-production` Suffix.
+      # Deploy master commits to our development ECR for now. We don't want to give CI access to AWS prod, so instead, we simply deploy to dev with a `-production` suffix.
       Repo=$DEV_ECR
       # Do not overwrite the user-provided suffix.
       if [ -z "$Suffix" ]; then
@@ -94,7 +94,7 @@ function main() {
       Secret=$DEV_AWS_SECRET_ACCESS_KEY
       Key=$DEV_AWS_ACCESS_KEY_ID
     elif [ "$Branch" = "release" ]; then
-      # Deploy develop commits to our QA ECR.
+      # Deploy release commits to our QA ECR.
       Repo=$QA_ECR
       # Since QA is in the same AWS account as dev, we can re-use the keys.
       Secret=$DEV_AWS_SECRET_ACCESS_KEY
