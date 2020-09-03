@@ -42,7 +42,7 @@ command -v github-release.v0 > /dev/null 2>&1 || throw "Unable to locate github-
 
 # Given both of our ruby repositories are now monorepo structured, there is no top level gemspec file
 # The version number can be inferred from package json
-PKG_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+PKG_VERSION=$(grep 'version' package.json | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[:space:]')
 # Ensure we read a version.
 [[ -z $PKG_VERSION ]] && throw "Unable to parse version"
 
