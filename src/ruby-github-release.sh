@@ -40,16 +40,9 @@ get_changelog () {
 # NOTE: we install it from gopkg (gopkg.in/aktau/github-release.v0), so the binary has a `.v0` suffix.
 command -v github-release.v0 > /dev/null 2>&1 || throw "Unable to locate github-release binary"
 
-# Ensure a single .gemspec file is present.
-GEMSPEC_COUNT=$(find . -type f -name "*.gemspec" | wc -l | tr -d "[:space:]")
-[ "$GEMSPEC_COUNT" != "1" ] && throw "Expecting a single .gemspec file"
-
-# Find .gemspec file.
-GEMSPEC_FILE=$(ls ./*.gemspec)
-
-# Parse the version number (strip either single or double quotes around the version number if any)
-PKG_VERSION=$(perl -nle 'print "$1" if m{spec\.version\s+=\s(.*)}' "$GEMSPEC_FILE" | tr -d "'" | tr -d '"')
-
+# Given both of our ruby repositories are now monorepo structured, there is no top level gemspec file
+# The version number can be inferred from package json
+PKG_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
 # Ensure we read a version.
 [[ -z $PKG_VERSION ]] && throw "Unable to parse version"
 
