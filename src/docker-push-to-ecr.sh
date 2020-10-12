@@ -118,8 +118,7 @@ function main() {
 
   echo "Building, tagging and pushing version $Version$Suffix"
   # shellcheck disable=SC2086
-  docker build $DockerArgs -t "$Repo:latest$Suffix" -t "$Repo:$Version$Suffix" "$Dockerfile"
-  docker push "$Repo:latest$Suffix"
+  docker build $DockerArgs -t "$Repo:$Version$Suffix" "$Dockerfile"
   docker push "$Repo:$Version$Suffix"
 
   echo "Done!"
