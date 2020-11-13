@@ -56,7 +56,7 @@ fi
 
 echo "Releasing v$PKG_VERSION"
 
-if [ -z $GITHUB_RELEASE_TARGET ]; then
+if [ -z "$GITHUB_RELEASE_TARGET" ]; then
   # Create a release.
   github-release.v0 release \
     --user "$CIRCLE_PROJECT_USERNAME" \
