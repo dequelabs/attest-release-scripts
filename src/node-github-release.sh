@@ -56,10 +56,21 @@ fi
 
 echo "Releasing v$PKG_VERSION"
 
-# Create a release.
-github-release.v0 release \
-  --user "$CIRCLE_PROJECT_USERNAME" \
-  --repo "$CIRCLE_PROJECT_REPONAME" \
-  --tag "v$PKG_VERSION" \
-  --name "Release $PKG_VERSION" \
-  --description "$(get_changelog)"
+if [ -z $GITHUB_RELEASE_TARGET ]; then
+  # Create a release.
+  github-release.v0 release \
+    --user "$CIRCLE_PROJECT_USERNAME" \
+    --repo "$CIRCLE_PROJECT_REPONAME" \
+    --tag "v$PKG_VERSION" \
+    --name "Release $PKG_VERSION" \
+    --description "$(get_changelog)"
+else 
+  # Create a release with a target branch
+  github-release.v0 release \
+    --user "$CIRCLE_PROJECT_USERNAME" \
+    --repo "$CIRCLE_PROJECT_REPONAME" \
+    --tag "v$PKG_VERSION" \
+    --target "$GITHUB_RELEASE_TARGET" \
+    --name "Release $PKG_VERSION" \
+    --description "$(get_changelog)"
+fi
