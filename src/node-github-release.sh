@@ -56,10 +56,16 @@ fi
 
 echo "Releasing v$PKG_VERSION"
 
+args=(
+  --user "$CIRCLE_PROJECT_USERNAME" 
+  --repo "$CIRCLE_PROJECT_REPONAME" 
+  --tag "v$PKG_VERSION" 
+  --name "Release $PKG_VERSION"
+)
+
+if [ -n "$GITHUB_RELEASE_TARGET" ]; then
+  args+=("--target" "$GITHUB_RELEASE_TARGET")
+fi
+
 # Create a release.
-github-release.v0 release \
-  --user "$CIRCLE_PROJECT_USERNAME" \
-  --repo "$CIRCLE_PROJECT_REPONAME" \
-  --tag "v$PKG_VERSION" \
-  --name "Release $PKG_VERSION" \
-  --description "$(get_changelog)"
+github-release.v0 release "${args[@]}" --description "$(get_changelog)"
