@@ -14,8 +14,10 @@ function usage() {
   echo "  image's version number and \$CIRCLE_BRANCH to derive which ECR to"
   echo "  push to."
   echo ""
-  echo "  Will append a \"-production\" suffix to production (master branch)"
-  echo "  images."
+  echo "  If \$PROD_ECR is not set, will push to the \$DEV_ECR and append"
+  echo "  a \"-production\" suffix to the image. This functionality will be"
+  echo "  removed once all services are setup to deploy to their production"
+  echo "  ECRs."
   echo ""
   echo "  Options"
   echo "    --dockerfile=[path]    Path to the Dockerfile (defaults to \".\")"
@@ -85,15 +87,26 @@ function main() {
   else
     # Otherwise, try to figure out what ECR to deploy to based on the Git branch.
     if [ "$Branch" = "master" ]; then
-      # Deploy master commits to our development ECR for now. We don't want to give CI access to AWS prod, so instead, we simply deploy to dev with a `-production` suffix.
-      Repo=$DEV_ECR
-      # Do not overwrite the user-provided suffix.
-      if [ -z "$Suffix" ]; then
-        Suffix="-production"
+
+      # If PROD_ECR is set, push to it.
+      # Not all services have this variable set, so we need to fallback to the dev ECR/"-production" suffix hack.
+      if [ -z "$PROD_ECR" ]; then
+        # Deploy master commits to our development ECR for now. We don't want to give CI access to AWS prod, so instead, we simply deploy to dev with a `-production` suffix.
+        Repo=$DEV_ECR
+        # Do not overwrite the user-provided suffix.
+        if [ -z "$Suffix" ]; then
+          Suffix="-production"
+        fi
+        Secret=$DEV_AWS_SECRET_ACCESS_KEY
+        Key=$DEV_AWS_ACCESS_KEY_ID
+      else
+        Repo=$PROD_ECR
+        # When pushing to the prod ECR, we must use prod creds.
+        [ -z "$PROD_AWS_SECRET_ACCESS_KEY" ] && throw "PROD_ECR set, missing PROD_AWS_SECRET_ACCESS_KEY"
+        [ -z "$PROD_AWS_ACCESS_KEY_ID" ] && throw "PROD_ECR set, missing PROD_AWS_ACCESS_KEY_ID"
+        Secret=$PROD_AWS_SECRET_ACCESS_KEY
+        Key=$PROD_AWS_ACCESS_KEY_ID
       fi
-      # TODO: These should be `PROD_` keys.
-      Secret=$DEV_AWS_SECRET_ACCESS_KEY
-      Key=$DEV_AWS_ACCESS_KEY_ID
     elif [ "$Branch" = "release" ]; then
       # Deploy release commits to our QA ECR.
       Repo=$QA_ECR

@@ -51,8 +51,10 @@ docker-push-to-ecr.sh [options]
   image's version number and $CIRCLE_BRANCH to derive which ECR to
   push to.
 
-  Will append a "-production" suffix to production (master branch)
-  images.
+  If $PROD_ECR is not set, will push to the $DEV_ECR and append
+  a "-production" suffix to the image. This functionality will be
+  removed once all services are setup to deploy to their production
+  ECRs.
 
   Options
     --dockerfile=[path]    Path to the Dockerfile (defaults to ".")
