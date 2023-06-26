@@ -1,0 +1,18 @@
+name: shellcheck
+
+# Only run tests on unprotected branches.
+# Otherwise we waste build minutes re-running tests will know will pass.
+on:
+  push:
+    branches:
+      - '**'
+      - '!develop'
+      - '!main'
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
