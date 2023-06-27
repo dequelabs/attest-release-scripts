@@ -1,13 +1,6 @@
 name: shellcheck
 
-# Only run tests on unprotected branches.
-# Otherwise we waste build minutes re-running tests will know will pass.
-on:
-  push:
-    branches:
-      - '**'
-      - '!develop'
-      - '!main'
+on: [push]
 jobs:
   shellcheck:
     name: Shellcheck
