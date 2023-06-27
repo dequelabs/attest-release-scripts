@@ -30,7 +30,8 @@ function usage() {
 function main() {
   readonly Branch="$CIRCLE_BRANCH"
   # Always use 8 characters. This ensures consistency with image tags.
-  readonly Version=$(git rev-parse --short=8 HEAD)
+  local Version="" 
+  Version=$(git rev-parse --short=8 HEAD)
   local Repo=""
   local Secret=""
   local Key=""
