@@ -110,14 +110,10 @@ function main() {
         Secret=$PROD_AWS_SECRET_ACCESS_KEY
         Key=$PROD_AWS_ACCESS_KEY_ID
       fi
-    elif [ "$Branch" = "release" ] || [[ "$Branch" =~ $ReleasePattern ]] || [[ "$Branch" =~ $ReleasePreviewPattern ]]; then
+    elif [ "$Branch" = "develop" ] || [ "$Branch" = "release" ] || [[ "$Branch" =~ $ReleasePattern ]] || [[ "$Branch" =~ $ReleasePreviewPattern ]]; then
       # Deploy release commits to our QA ECR.
       Repo=$QA_ECR
       # Since QA is in the same AWS account as dev, we can re-use the keys.
-      Secret=$DEV_AWS_SECRET_ACCESS_KEY
-      Key=$DEV_AWS_ACCESS_KEY_ID
-    elif [ "$Branch" = "develop" ]; then
-      Repo=$DEV_ECR
       Secret=$DEV_AWS_SECRET_ACCESS_KEY
       Key=$DEV_AWS_ACCESS_KEY_ID
     else
