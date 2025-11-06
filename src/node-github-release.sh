@@ -2,7 +2,7 @@
 
 set -e
 
-throw() { 
+throw() {
   echo "$@" 1>&2
   exit 1
 }
@@ -33,8 +33,24 @@ get_changelog () {
 
 # Ensure required env vars are set.
 [ -z "$GITHUB_TOKEN" ] && throw "GITHUB_TOKEN not set"
-[ -z "$CIRCLE_PROJECT_REPONAME" ] && throw "CIRCLE_PROJECT_REPONAME not set"
-[ -z "$CIRCLE_PROJECT_USERNAME" ] && throw "CIRCLE_PROJECT_USERNAME not set"
+
+# Support both CircleCI and GitHub Actions environment variables
+if [ -n "$CIRCLE_PROJECT_REPONAME" ]; then
+  REPO_NAME="$CIRCLE_PROJECT_REPONAME"
+elif [ -n "$GITHUB_REPOSITORY" ]; then
+  # Extract repo name from GITHUB_REPOSITORY (format: "owner/repo")
+  REPO_NAME="${GITHUB_REPOSITORY#*/}"
+else
+  throw "Neither CIRCLE_PROJECT_REPONAME nor GITHUB_REPOSITORY is set"
+fi
+
+if [ -n "$CIRCLE_PROJECT_USERNAME" ]; then
+  REPO_OWNER="$CIRCLE_PROJECT_USERNAME"
+elif [ -n "$GITHUB_REPOSITORY_OWNER" ]; then
+  REPO_OWNER="$GITHUB_REPOSITORY_OWNER"
+else
+  throw "Neither CIRCLE_PROJECT_USERNAME nor GITHUB_REPOSITORY_OWNER is set"
+fi
 
 # Ensure https://github.com/aktau/github-release is installed.
 # NOTE: we install it from gopkg (gopkg.in/aktau/github-release.v0), so the binary has a `.v0` suffix.
@@ -57,9 +73,9 @@ fi
 echo "Releasing v$PKG_VERSION"
 
 args=(
-  --user "$CIRCLE_PROJECT_USERNAME" 
-  --repo "$CIRCLE_PROJECT_REPONAME" 
-  --tag "v$PKG_VERSION" 
+  --user "$REPO_OWNER"
+  --repo "$REPO_NAME"
+  --tag "v$PKG_VERSION"
   --name "Release $PKG_VERSION"
 )
 
