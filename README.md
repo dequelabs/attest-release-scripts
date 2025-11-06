@@ -18,6 +18,13 @@ The scripts make the following assumptions:
 - `CIRCLE_PROJECT_REPONAME` is exported
 - `CIRCLE_PROJECT_USERNAME` is exported
 
+> [!NOTE]
+> Updates to support GitHub Actions runners are in progress.
+> Starting with `node-github-release.sh` they will start
+> to support `GITHUB_` environment variables as well as
+> CircleCI to transition platforms. Documentation will
+> be updated later once this is done across all the scripts.
+
 ## Scripts
 
 ### node-github-release.sh
