@@ -1,6 +1,9 @@
 name: shellcheck
 
 on: [push]
+
+permissions: {}
+
 jobs:
   shellcheck:
     name: Shellcheck
